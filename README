@@ -1,5 +1,0 @@
-Experimental port of gevent 1.0b http://www.gevent.org/ to run on PyPy http://pypy.org/
-
-PyPy does not easily support C extension modules, so this is just gevent with all the C extension parts replaced with ctypes http://docs.python.org/library/ctypes.html wrappers.
-
-While basic functionality should be there, error handling in this port is untested and for sure broken.  Also, an installed copy of libev http://software.schmorp.de/pkg/libev.html is required (normal gevent compiles libev itself).

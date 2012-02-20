@@ -7,6 +7,12 @@ PyPy does not easily support C extension modules, so this is just gevent with al
 
 While basic functionality should be there, error handling in this port is untested and for sure broken.  Also, an installed copy of libev_ is required (normal gevent compiles libev itself).  Even with PyPy's JIT, the calls of the ctypes overhead will hurt performance vs gevent with the normal C extension module.
 
+Limitations
+-----------
+* Slightly slower due to ctypes wrappers
+* Exception/error handling incomplete
+* Win32 is not supported
+
 .. _gevent: http://www.gevent.org
 .. _libev: http://software.schmorp.de/pkg/libev.html
 .. _ctypes: http://docs.python.org/library/ctypes.html

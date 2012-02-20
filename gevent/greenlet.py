@@ -88,12 +88,15 @@ class Greenlet(greenlet):
         # needed by killall
         return self.parent.loop
 
-    if six.PY3:
-        def __bool__(self):
-            return self._start_event is not None and self._exception is _NONE
-    else:
-        def __nonzero__(self):
-            return self._start_event is not None and self._exception is _NONE
+    # hopefully nothing depends on these, they fuck up pypy's greenlet.py
+    # apparently greenlet.py expects bool(some_greenlet) == False to mean "continulet uninitialized"
+    # and gevent expects bool(some_greenlet) == False to mean "no start events or exceptions on the greenlet"
+    # if six.PY3:
+    #     def __bool__(self):
+    #         return self._start_event is not None and self._exception is _NONE
+    # else:
+    #     def __nonzero__(self):
+    #         return self._start_event is not None and self._exception is _NONE
 
     @property
     def started(self):

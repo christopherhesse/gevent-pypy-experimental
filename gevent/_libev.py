@@ -278,6 +278,8 @@ def UNCHECKED(type):
     if (hasattr(type, "_type_") and isinstance(type._type_, str)
         and type._type_ != "P"):
         return type
+    elif type is None: # this is the value used for a void function
+        return None
     else:
         return c_void_p
 

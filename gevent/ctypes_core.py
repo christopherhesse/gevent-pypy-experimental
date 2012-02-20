@@ -229,9 +229,9 @@ class Loop(Lookupable):
             libev.ev_ref(self._ptr)
             libev.ev_prepare_stop(self._ptr, pointer(self._signal_checker))
 #ifdef _WIN32
-        if libev.ev_is_active(pointer(self._periodic_signal_checker)):
-            libev.ev_ref(self._ptr)
-            libev.ev_timer_stop(self._ptr, pointer(self._periodic_signal_checker))
+        # if libev.ev_is_active(pointer(self._periodic_signal_checker)):
+        #     libev.ev_ref(self._ptr)
+        #     libev.ev_timer_stop(self._ptr, pointer(self._periodic_signal_checker))
 #endif
 
     def destroy(self):
@@ -419,8 +419,6 @@ class BaseWatcher(Lookupable):
     type = None
 
     def __init__(self, loop, ref=True, *init_args):
-        print "NEW WATCHER: ", self.__class__
-        self.loop = None
         self._callback = None
         self.args = None
 
@@ -555,94 +553,51 @@ class BaseWatcher(Lookupable):
     def active(self):
         return True if libev.ev_is_active(pointer(self._watcher_struct)) else False
 
-#
-# cdef public class io(watcher) [object PyGeventIOObject, type PyGeventIO_Type]:
-#
-#     WATCHER_BASE(io)
-#
-#     def start(self, object callback, *args, pass_events=False):
-#         self.callback = callback
-#         if pass_events:
-#             self.args = (GEVENT_CORE_EVENTS, ) + args
-#         else:
-#             self.args = args
-#         LIBEV_UNREF
-#         libev.ev_io_start(self.loop._ptr, &self._watcher)
-#         PYTHON_INCREF
-#
-#     ACTIVE
-#
-#     PENDING
-#
-# #ifdef _WIN32
-#
-#     def __init__(self, loop loop, long fd, int events, ref=True):
-#         if events & ~(libev.EV__IOFDSET | libev.EV_READ | libev.EV_WRITE):
-#             raise ValueError('illegal event mask: %r' % events)
-#         cdef int vfd = libev.vfd_open(fd)
-#         libev.vfd_free(self._watcher.fd)
-#         libev.ev_io_init(&self._watcher, <void *>gevent_callback_io, vfd, events)
-#         self.loop = loop
-#         if ref:
-#             self._flags = 0
-#         else:
-#             self._flags = 4
-#
-# #else
-#
-#     def __init__(self, loop loop, int fd, int events, ref=True):
-#         if fd < 0:
-#             raise ValueError('fd must be non-negative: %r' % fd)
-#         if events & ~(libev.EV__IOFDSET | libev.EV_READ | libev.EV_WRITE):
-#             raise ValueError('illegal event mask: %r' % events)
-#         libev.ev_io_init(&self._watcher, <void *>gevent_callback_io, fd, events)
-#         self.loop = loop
-#         if ref:
-#             self._flags = 0
-#         else:
-#             self._flags = 4
-#
-# #endif
-#
-#     property fd:
-#
-#         def __get__(self):
-#             return libev.vfd_get(self._watcher.fd)
-#
-#         def __set__(self, long fd):
-#             if libev.ev_is_active(&self._watcher):
-#                 raise AttributeError("'io' watcher attribute 'fd' is read-only while watcher is active")
-#             cdef int vfd = libev.vfd_open(fd)
-#             libev.vfd_free(self._watcher.fd)
-#             libev.ev_io_init(&self._watcher, <void *>gevent_callback_io, vfd, self._watcher.events)
-#
-#     property events:
-#
-#         def __get__(self):
-#             return self._watcher.events
-#
-#         def __set__(self, int events):
-#             if libev.ev_is_active(&self._watcher):
-#                 raise AttributeError("'io' watcher attribute 'events' is read-only while watcher is active")
-#             libev.ev_io_init(&self._watcher, <void *>gevent_callback_io, self._watcher.fd, events)
-#
-#     property events_str:
-#
-#         def __get__(self):
-#             return _events_to_str(self._watcher.events)
-#
-#     def _format(self):
-#         return ' fd=%s events=%s' % (self.fd, self.events_str)
-#
-# #ifdef _WIN32
-#
-#     def __cinit__(self):
-#         self._watcher.fd = -1;
-#
-#     def __dealloc__(self):
-#         libev.vfd_free(self._watcher.fd)
-#
-# #endif
+
+class IOWatcher(BaseWatcher):
+    def start(self, callback, *args, **kwargs):
+        self.callback = callback
+        if 'pass_events' in kwargs and kwargs['pass_events']:
+            self.args = (GEVENT_CORE_EVENTS, ) + args
+        else:
+            self.args = args
+        self._libev_unref()
+        libev.ev_io_start(self.loop._ptr, pointer(self._watcher_struct))
+
+    def __init__(self, loop, fd, events, ref=True):
+        if fd < 0:
+            raise ValueError('fd must be non-negative: %r' % fd)
+        if events & ~(libev.EV__IOFDSET | libev.EV_READ | libev.EV_WRITE):
+            raise ValueError('illegal event mask: %r' % events)
+        
+        super(IOWatcher, self).__init__(loop, ref, fd, events)
+
+    def get_fd(self):
+        return self._watcher_struct.fd
+        
+    def set_fd(self, fd):
+        if libev.ev_is_active(pointer(self._watcher_struct)):
+            raise AttributeError("'io' watcher attribute 'events' is read-only while watcher is active")
+        self._watcher_init(self._watcher_struct, self._watcher_callback, fd, self._watcher_struct.events)
+    
+    fd = property(get_fd, set_fd)
+
+    def get_events(self):
+        return self._watcher_struct.events
+    
+    def set_events(self, events):
+        if libev.ev_is_active(pointer(self._watcher_struct)):
+            raise AttributeError("'io' watcher attribute 'events' is read-only while watcher is active")
+        self._watcher_init(self._watcher_struct, self._watcher_callback, self._watcher_struct.fd, events)
+    
+    events = property(get_events, set_events)
+
+    @property
+    def events_str(self):
+        return _events_to_str(self._watcher_struct.events)
+
+    def _format(self):
+        return ' fd=%s events=%s' % (self.fd, self.events_str)
 
 class TimerWatcher(BaseWatcher):
     type = "timer"
@@ -709,6 +664,7 @@ class AsyncWatcher(BaseWatcher):
     def send(self):
         libev.ev_async_send(self.loop._ptr, pointer(self._watcher_struct))
 
+# child watcher doesn't seem to be used
 #cdef public class child(watcher) [object PyGeventChildObject, type PyGeventChild_Type]:
 #
 #    WATCHER(child)
@@ -760,7 +716,6 @@ def set_syserr_cb(callback):
     else:
         raise TypeError('Expected callable or None, got %r' % (callback, ))
 
-
 def set_exc_info(type, value):
     if type is not None or value is not None:
         print "set_exc_info: ", type, value
@@ -777,11 +732,7 @@ def gevent_callback(watcher, revents):
     if watcher.args is not None and len(watcher.args) > 0 and watcher.args[0] == GEVENT_CORE_EVENTS:
         watcher.args[0] = revents
 
-    from hub import getcurrent
-    print "gevent_callback current greenlet:", "%s" % getcurrent()
-    print "gevent_callback calling watcher: ", watcher, " with args:", watcher.args
     watcher._callback(*watcher.args)
-    print "watcher callback complete"
 
     if not libev.ev_is_active(pointer(watcher._watcher_struct)):
         watcher.stop()
@@ -794,15 +745,16 @@ gevent_signal_check = libev.wrap_callback("prepare", _gevent_signal_check)
 def gevent_periodic_signal_check(loop, watcher, revents):
     raise Exception("unimplemented")
 
-# TODO: circular ref to watcher? watcher has callback that points to watcher - use lookup function - use cls of watcher watcher.__class__
 def create_watcher_callback(watcher):
+    """
+    Create custom callback functions for each watcher
+    """
     # get reference to the class so we can use it to look up this
     # specific watcher without using a reference to the watcher
     watcher_class = watcher.__class__
+    
     def watcher_callback(loop_struct_pointer, watcher_struct_pointer, revents):
-        print "watcher_callback"
         w = watcher_class.lookup_instance(watcher_struct_pointer.contents)
         gevent_callback(w, revents)
-        print "end watcher_callback"
 
     return libev.wrap_callback(watcher.type, watcher_callback)

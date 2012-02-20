@@ -205,8 +205,6 @@ class Loop(Lookupable):
                 if not self._ptr:
                     raise SystemError("ev_default_loop(%s) failed" % (c_flags, ))
                 libev.ev_prepare_start(self._ptr, pointer(self._signal_checker))
-                # TODO: why doesn't this work
-                #libev.ev_unref(self._ptr)
 # #ifdef _WIN32
 #                 libev.ev_timer_start(self._ptr, pointer(self._periodic_signal_checker))
 #                 libev.ev_unref(self._ptr)
@@ -766,27 +764,11 @@ def set_syserr_cb(callback):
 def set_exc_info(type, value):
     if type is not None or value is not None:
         print "set_exc_info: ", type, value
-    # cdef PyThreadState* tstate = PyThreadState_GET()
-    # Py_XDECREF(tstate.exc_type)
-    # Py_XDECREF(tstate.exc_value)
-    # Py_XDECREF(tstate.exc_traceback)
-    # if type is None:
-    #     tstate.exc_type = NULL
-    # else:
-    #     Py_INCREF(<PyObjectPtr>type)
-    #     tstate.exc_type = <PyObjectPtr>type
-    # if value is None:
-    #     tstate.exc_value = NULL
-    # else:
-    #     Py_INCREF(<PyObjectPtr>value)
-    #     tstate.exc_value = <PyObjectPtr>value
-    # tstate.exc_traceback = NULL
 
 def gevent_handle_error(loop, context):
     raise Exception("unimplemented")
 
 def gevent_check_signals(loop):
-    # TODO: does this do anything at all
     if sys.exc_info()[0] is not None:
         gevent_handle_error(loop, None)
 

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/101/trunk/ctypesgencore/processor
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/101/trunk/ctypesgencore/processor/__init__.py
+END
+operations.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/101/trunk/ctypesgencore/processor/operations.py
+END
+pipeline.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/101/trunk/ctypesgencore/processor/pipeline.py
+END
+dependencies.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/101/trunk/ctypesgencore/processor/dependencies.py
+END

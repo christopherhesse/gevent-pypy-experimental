@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/136/trunk/ctypesgencore
+END
+old libraryloader.py
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/101/trunk/ctypesgencore/old%20libraryloader.py
+END
+options.py
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/130/trunk/ctypesgencore/options.py
+END
+libraryloader.py
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/136/trunk/ctypesgencore/libraryloader.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/128/trunk/ctypesgencore/__init__.py
+END
+expressions.py
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/101/trunk/ctypesgencore/expressions.py
+END
+ctypedescs.py
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/130/trunk/ctypesgencore/ctypedescs.py
+END
+descriptions.py
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/101/trunk/ctypesgencore/descriptions.py
+END
+messages.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/132/trunk/ctypesgencore/messages.py
+END

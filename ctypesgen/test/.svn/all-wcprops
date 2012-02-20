@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/svn/!svn/ver/133/trunk/test
+END
+testsuite.py
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/126/trunk/test/testsuite.py
+END
+gen-parser-outputs
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/133/trunk/test/gen-parser-outputs
+END
+ctypesgentest.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/114/trunk/test/ctypesgentest.py
+END
+test-parser
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/133/trunk/test/test-parser
+END

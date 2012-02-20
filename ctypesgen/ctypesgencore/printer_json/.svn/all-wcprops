@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/129/trunk/ctypesgencore/printer_json
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/129/trunk/ctypesgencore/printer_json/__init__.py
+END
+test.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/129/trunk/ctypesgencore/printer_json/test.py
+END
+printer.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/129/trunk/ctypesgencore/printer_json/printer.py
+END

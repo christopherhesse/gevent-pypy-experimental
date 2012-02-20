@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/132/trunk/ctypesgencore/printer_python
+END
+defaultheader.py
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/129/trunk/ctypesgencore/printer_python/defaultheader.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/129/trunk/ctypesgencore/printer_python/__init__.py
+END
+test.py
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/129/trunk/ctypesgencore/printer_python/test.py
+END
+printer.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/132/trunk/ctypesgencore/printer_python/printer.py
+END
+preamble.py
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/129/trunk/ctypesgencore/printer_python/preamble.py
+END

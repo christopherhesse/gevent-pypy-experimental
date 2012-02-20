@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 23
+/svn/!svn/ver/137/trunk
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 31
+/svn/!svn/ver/101/trunk/LICENSE
+END
+todo.txt
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/101/trunk/todo.txt
+END
+setup.py
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/128/trunk/setup.py
+END
+ctypesgen.py
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/132/trunk/ctypesgen.py
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/!svn/ver/132/trunk/README
+END

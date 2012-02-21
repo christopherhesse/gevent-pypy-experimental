@@ -2,7 +2,8 @@ import ctypes
 from ctypes import pointer
 import sys
 import os
-from signal import NSIG
+import signal
+import traceback
 
 import libev
 from lookupable import Lookupable
@@ -555,6 +556,8 @@ class BaseWatcher(Lookupable):
 
 
 class IOWatcher(BaseWatcher):
+    type = "io"
+    
     def start(self, callback, *args, **kwargs):
         self.callback = callback
         if 'pass_events' in kwargs and kwargs['pass_events']:
@@ -636,7 +639,7 @@ class SignalWatcher(BaseWatcher):
     type = "signal"
 
     def __init__(self, loop, signalnum, ref=True):
-        if signalnum < 1 or signalnum >= NSIG:
+        if signalnum < 1 or signalnum >= signal.NSIG:
             raise ValueError('illegal signal number: %r' % signalnum)
         # still possible to crash on one of libev's asserts:
         # 1) "libev: ev_signal_start called with illegal signal number"
@@ -692,7 +695,7 @@ standard_c_lib.__error.restype = ctypes.POINTER(ctypes.c_int)
 
 def _syserr_cb(msg):
     try:
-        errno = standard_c_lib._error().contents.value
+        errno = standard_c_lib.__error().contents.value
         __SYSERR_CALLBACK(msg, errno)
     except:
         set_syserr_cb(None)
@@ -718,15 +721,14 @@ def set_syserr_cb(callback):
 
 def set_exc_info(type, value):
     if type is not None or value is not None:
-        print "set_exc_info: ", type, value
-
-def gevent_handle_error(loop, context):
-    raise Exception("unimplemented")
+        pass
+        # hopefully this is done automatically by ctypes
+        #print "set_exc_info: ", type, value
 
 def gevent_check_signals(loop):
     if sys.exc_info()[0] is not None:
         gevent_handle_error(loop, None)
-
+        
 def gevent_callback(watcher, revents):
     gevent_check_signals(watcher.loop)
     if watcher.args is not None and len(watcher.args) > 0 and watcher.args[0] == GEVENT_CORE_EVENTS:
@@ -737,9 +739,25 @@ def gevent_callback(watcher, revents):
     if not libev.ev_is_active(pointer(watcher._watcher_struct)):
         watcher.stop()
 
+HANDLING_SIGINT = False
+def _handle_sigint(signum, frame):
+    # grab the sigint, _gevent_signal_check will be called after this function and
+    # can actually handle the signal
+    global HANDLING_SIGINT
+    HANDLING_SIGINT = True
+
+signal.signal(signal.SIGINT, _handle_sigint)
+
 def _gevent_signal_check(loop_struct_pointer, watcher_struct_pointer, revents):
     loop = Loop.lookup_instance(loop_struct_pointer)
-    gevent_check_signals(loop)
+    global HANDLING_SIGINT
+    if HANDLING_SIGINT:
+        HANDLING_SIGINT = False
+        try:
+            raise KeyboardInterrupt()
+        except KeyboardInterrupt:
+            exc_info = sys.exc_info()
+        loop.handle_error(loop, *exc_info)
 gevent_signal_check = libev.wrap_callback("prepare", _gevent_signal_check)
 
 def gevent_periodic_signal_check(loop, watcher, revents):

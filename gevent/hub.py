@@ -5,7 +5,7 @@ import os
 import traceback
 
 python_interpreter = sys.subversion[0]
-if True: #python_interpreter == 'PyPy':
+if python_interpreter == 'PyPy':
     from gevent import ctypes_core as core
     GEVENT_USE_CTYPES = True
 else:

@@ -720,13 +720,10 @@ def set_syserr_cb(callback):
         raise TypeError('Expected callable or None, got %r' % (callback, ))
 
 def set_exc_info(type, value):
-    if type is not None or value is not None:
-        pass
-        # hopefully this is done automatically by ctypes
-        #print "set_exc_info: ", type, value
+    pass # seems like ctypes automatically checks for errors
 
 def gevent_check_signals(loop):
-    if sys.exc_info()[0] is not None:
+    if sys.exc_info()[0] is not None: # this is probably never True
         gevent_handle_error(loop, None)
         
 def gevent_callback(watcher, revents):

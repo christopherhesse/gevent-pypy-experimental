@@ -11,12 +11,17 @@ On my Mac system, I needed to specify the LD_LIBRARY_PATH to run this with PyPy 
 
     LD_LIBRARY_PATH="/opt/local/lib" pypy whatever.py
 
+How to Install
+--------------
+PyPy can't use the default installer, so just copy the "gevent" folder to your PyPy site-packages.  Since it's all Python and uses your own libev installation, there is really no need to build anything.
+
 Limitations
 -----------
-* Crashes sometimes (when running against ab) unless you turn off the JIT (pypy --jit off), possibly a bug in the JIT.  Seems stable besides that.
-* Slower than normal python+normal gevent
+* Crashes sometimes unless you turn off the JIT (pypy --jit off), possibly a bug in the JIT.  Seems stable besides that.
+* Way slower than normal python+normal gevent
 * Exception/error handling incomplete
 * Win32 is completely not supported
+* gevent tests a long way from running successfully
 
 .. _gevent: http://www.gevent.org
 .. _libev: http://software.schmorp.de/pkg/libev.html

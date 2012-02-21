@@ -120,6 +120,9 @@ def ev_is_pending(ev):
 def ev_is_active(ev):
     return ev.contents.active
 
+def ev_set_priority(ev, pri):
+    ev.contents.priority = pri
+
 def wrap_callback(watcher_type, function):
     watcher_struct_type = globals()["ev_" + watcher_type]
     return ctypes.CFUNCTYPE(None, ctypes.POINTER(ev_loop), ctypes.POINTER(watcher_struct_type), ctypes.c_int)(function)

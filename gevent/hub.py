@@ -4,13 +4,7 @@ import sys
 import os
 import traceback
 
-python_interpreter = sys.subversion[0]
-if python_interpreter == 'PyPy':
-    from gevent import ctypes_core as core
-    GEVENT_USE_CTYPES = True
-else:
-    from gevent import core
-    GEVENT_USE_CTYPES = False
+from gevent import ctypes_core as core
 
 __all__ = ['getcurrent',
            'GreenletExit',
@@ -273,10 +267,7 @@ class Hub(greenlet):
 
     SYSTEM_ERROR = (KeyboardInterrupt, SystemExit, SystemError)
     NOT_ERROR = (GreenletExit, SystemExit)
-    if GEVENT_USE_CTYPES:
-        loop_class = config('gevent.ctypes_core.loop', 'GEVENT_LOOP')
-    else:
-        loop_class = config('gevent.core.loop', 'GEVENT_LOOP')
+    loop_class = config('gevent.ctypes_core.loop', 'GEVENT_LOOP')
     resolver_class = ['gevent.resolver_ares.Resolver',
                       'gevent.resolver_thread.Resolver',
                       'gevent.socket.BlockingResolver']

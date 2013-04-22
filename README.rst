@@ -1,7 +1,7 @@
 gevent-pypy-experimental
 =======
 
-Experimental port of gevent_ 1.0b to run on PyPy_.  Don't use this for anything serious.
+Experimental port of gevent_ 1.0b to run on PyPy_.  Don't use this.  Use https://github.com/gevent-on-pypy/pypycore and https://github.com/schmir/gevent/tree/pypy-hacks as mentioned on http://morepypy.blogspot.com/2013/04/pypy-20-beta-2-released.html
 
 PyPy does not easily support C extension modules, so this is just gevent with all the C extension parts replaced with ctypes_ wrappers.
 
